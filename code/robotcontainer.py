@@ -9,11 +9,13 @@ import commands2.button
 import wpilib
 import romi
 
-from commands.arcadedrive import ArcadeDrive
+from commands.throttlearcadedrive import ThrottleArcadeDrive
 from commands.autonomous_distance import AutonomousDistance
 from commands.autonomous_time import AutonomousTime
 
 from subsystems.drivetrain import Drivetrain
+
+from collections import namedtuple
 
 
 class RobotContainer:
@@ -24,7 +26,15 @@ class RobotContainer:
     subsystems, commands, and button mappings) should be declared here.
     """
 
+    TM_AXES = namedtuple('TM_Axes',
+                         ['LEFT_RIGHT', 'FORWARD_BACK', 'THROTTLE',
+                          'ROTATION', 'ROCKER']
+                         )
+
     def __init__(self) -> None:
+        # Axes for a Thrustmaster controller
+        self.tm_axes = self.TM_AXES(0, 1, 2, 5, 6)
+
         # The robot's subsystems and commands are defined here...
         self.drivetrain = Drivetrain()
         self.onboardIO = romi.OnBoardIO(
@@ -56,8 +66,6 @@ class RobotContainer:
         :class:`.XboxController`), and then passing it to a :class:`.JoystickButton`.
         """
 
-        # Default command is arcade drive. This will run unless another command
-        # is scheduler over it
         self.drivetrain.setDefaultCommand(self.getArcadeDriveCommand())
 
         # Example of how to use the onboard IO
@@ -76,13 +84,14 @@ class RobotContainer:
     def getAutonomousCommand(self) -> typing.Optional[commands2.CommandBase]:
         return self.chooser.getSelected()
 
-    def getArcadeDriveCommand(self) -> ArcadeDrive:
+    def getArcadeDriveCommand(self) -> ThrottleArcadeDrive:
         """Use this to pass the teleop command to the main robot class.
 
         :returns: the command to run in teleop
         """
-        return ArcadeDrive(
+        return ThrottleArcadeDrive(
             self.drivetrain,
-            lambda: self.controller.getRawAxis(0),
-            lambda: self.controller.getRawAxis(1),
+            lambda: self.controller.getRawAxis(self.tm_axes.FORWARD_BACK),
+            lambda: self.controller.getRawAxis(self.tm_axes.ROTATION),
+            lambda: self.controller.getRawAxis(self.tm_axes.THROTTLE),
         )
