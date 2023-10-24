@@ -9,6 +9,7 @@ import commands2.button
 import wpilib
 import romi
 
+from commands.arcadedrive import ArcadeDrive
 from commands.throttlearcadedrive import ThrottleArcadeDrive
 from commands.autonomous_distance import AutonomousDistance
 from commands.autonomous_time import AutonomousTime
@@ -84,7 +85,7 @@ class RobotContainer:
     def getAutonomousCommand(self) -> typing.Optional[commands2.CommandBase]:
         return self.chooser.getSelected()
 
-    def getArcadeDriveCommand(self) -> ThrottleArcadeDrive:
+    def getArcadeDriveCommand(self) -> ArcadeDrive:
         """Use this to pass the teleop command to the main robot class.
 
         :returns: the command to run in teleop

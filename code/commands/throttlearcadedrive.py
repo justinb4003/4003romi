@@ -3,11 +3,11 @@
 # the WPILib BSD license file in the root directory of this project.
 
 import typing
-import commands2
 from subsystems.drivetrain import Drivetrain
+from commands.arcadedrive import ArcadeDrive
 
 
-class ThrottleArcadeDrive(commands2.CommandBase):
+class ThrottleArcadeDrive(ArcadeDrive):
     def __init__(
         self,
         drive: Drivetrain,
@@ -15,19 +15,16 @@ class ThrottleArcadeDrive(commands2.CommandBase):
         rotation: typing.Callable[[], float],
         throttle: typing.Callable[[], float],
     ) -> None:
-        """Creates a new ArcadeDrive. This command will drive your robot according to the speed supplier
-        lambdas. This command does not terminate.
+        """Creates a new ThrottleArcadeDrive. This command will drive your robot according to the
+        speed supplier lambdas. This command does not terminate.
 
         :param drivetrain:  The drivetrain subsystem on which this command will run
         :param forward:     Callable supplier of forward/backward speed
         :param rotation:    Callable supplier of rotational speed
         :param throttle:    Callable supplier of max speed for driving
         """
-        super().__init__()
+        super().__init__(drive, forward, rotation)
 
-        self.drive = drive
-        self.forward = forward
-        self.rotation = rotation
         self.throttle = throttle
 
         self.addRequirements([self.drive])
