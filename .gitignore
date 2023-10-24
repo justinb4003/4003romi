@@ -1,0 +1,9 @@
+examples/
+pi_images/
+venv*/
+**/networktables.json
+**/simgui-ds.json
+**/simgui.json
+**/simgui-window.json
+**/__pycache__/
+**/.deploy_cfg
